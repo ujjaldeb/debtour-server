@@ -34,7 +34,7 @@ async function run() {
             
         });
 
-    // GET api link
+    // GET api
     app.get('/hello', async(req,res)=>{
         res.send('Hello world');
     });
