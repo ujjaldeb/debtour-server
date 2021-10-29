@@ -22,21 +22,21 @@ async function run() {
     const database = client.db("carMechanic");
     const servicesCollection = database.collection("services");
 
-    app.get('/services', async(req, res) => {
+    app.get('/services', async (req, res) => {
 
-            // console.log('Hitting the get post api');
-            //res.send('Post Hitting succesfully');
-            
-            const cursor = servicesCollection.find({});
-            const services = await cursor.toArray();
-            res.send(services);
-            
-            
-        });
+      // console.log('Hitting the get post api');
+      //res.send('Post Hitting succesfully');
 
-    // GET api
-    app.get('/hello', async(req,res)=>{
-        res.send('Hello world');
+      const cursor = servicesCollection.find({});
+      const services = await cursor.toArray();
+      res.send(services);
+
+
+    });
+
+    // GET api link
+    app.get('/hello', async (req, res) => {
+      res.send('Hello world');
     });
 
 
