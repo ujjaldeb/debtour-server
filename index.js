@@ -2,6 +2,7 @@ const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const cors = require('cors');
 require('dotenv').config();
+const ObjectId = require('mongodb').ObjectId;
 
 // debTour
 // aUopCeLAO6Wwj1Lh
@@ -21,10 +22,12 @@ async function run() {
     await client.connect();
     const database = client.db("debTour");
     const servicesCollection = database.collection("services");
+    const ordersCollection = database.collection("orders");
+
 
     app.get('/services', async (req, res) => {
 
-      // console.log('Hitting the get post api');
+      console.log('got id');
       //res.send('Post Hitting succesfully');
 
       const cursor = servicesCollection.find({});
@@ -32,11 +35,37 @@ async function run() {
       res.send(services);
     });
 
+    app.get('/services/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      //res.send('Post Hitting succesfully');
+
+      const service = await servicesCollection.findOne(query);
+      res.json(service);
+    });
+
     // POST API
     app.post('/services', async (req, res) => {
       const newService = req.body;
       const result = await servicesCollection.insertOne(newService);
       res.json(result);
+    });
+
+    // ORDER POST API 
+    app.post('/orders', async (req, res) => {
+      console.log('Post Hitting succesfully');
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order);
+      //console.log(order);
+      res.json(result);
+    });
+
+    // ORDERS GET API 
+    app.get('/orders', async (req, res) => {
+      //console.log('Hitting the get post api');    
+      const cursor = ordersCollection.find({});
+      const orders = await cursor.toArray();
+      res.send(orders);
     });
 
   } finally {
