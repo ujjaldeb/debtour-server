@@ -62,14 +62,6 @@ async function run() {
       res.send(orders);
     });
 
-    // ORDERS GET API BY ID
-    app.get('/orders/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const order = await ordersCollection.findOne(query);
-      res.send(order);
-    });
-
     // ORDERS GET API BY EMAIL
     app.get("/orders/:email", async (req, res) => {
       const email = req.params.email;
@@ -77,6 +69,14 @@ async function run() {
       const cursor = ordersCollection.find({ email: email });
       const orders = await cursor.toArray();
       res.send(orders);
+    });
+
+    // ORDERS GET API BY ID
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const order = await ordersCollection.findOne(query);
+      res.send(order);
     });
 
     // ORDER UPDATE API
@@ -87,8 +87,6 @@ async function run() {
       const options = { upsert: true };
       const updateDoc = {
         $set: {
-          travel_time: updatedOrder.travel_time,
-          price: updatedOrder.price,
           status: updatedOrder.status,
         },
       };
