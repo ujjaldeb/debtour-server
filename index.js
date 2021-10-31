@@ -34,8 +34,6 @@ async function run() {
     app.get('/services/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      //res.send('Post Hitting succesfully');
-
       const service = await servicesCollection.findOne(query);
       res.json(service);
     });
@@ -64,6 +62,14 @@ async function run() {
       res.send(orders);
     });
 
+    // ORDERS GET API BY ID
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const order = await ordersCollection.findOne(query);
+      res.send(order);
+    });
+
     // ORDERS GET API BY EMAIL
     app.get("/orders/:email", async (req, res) => {
       const email = req.params.email;
@@ -72,6 +78,25 @@ async function run() {
       const orders = await cursor.toArray();
       res.send(orders);
     });
+
+    // ORDER UPDATE API
+    app.put('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedOrder = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          travel_time: updatedOrder.travel_time,
+          price: updatedOrder.price,
+          status: updatedOrder.status,
+        },
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc, options);
+
+      // console.log('update id', req);
+      res.json(result);
+    })
 
     // ORDER DELETE API
     app.delete("/orders/:id", async (req, res) => {
